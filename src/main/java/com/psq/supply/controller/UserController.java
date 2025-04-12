@@ -2,6 +2,8 @@ package com.psq.supply.controller;
 
 import com.psq.supply.entity.User;
 import com.psq.supply.repository.UserRepository;
+import com.psq.supply.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
+
+    @Autowired
+    private UserService userService;
     private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
@@ -20,8 +25,14 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+    public boolean createUser(@RequestBody User user) {
+        return userService.createUser(user);
+    }
+
+    @GetMapping("/login")
+    public boolean createUser( @RequestParam String userName,
+                               @RequestParam String password) {
+        return userService.login(userName, password);
     }
 
     @GetMapping("/{id}")
