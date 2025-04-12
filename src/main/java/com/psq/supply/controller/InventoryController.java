@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -49,13 +50,13 @@ public class InventoryController {
 
         if (Objects.nonNull(inventory) && (StringUtils.isNullOrEmpty(inventory.getId()))) {
             inventory.setId(String.valueOf(System.currentTimeMillis()));
-//            inventory.setLastUpdated(String.valueOf(new Date()));
-//            inventory.setCreatedAt(String.valueOf(new Date()));
+            inventory.setLastUpdated(String.valueOf(new Date()));
+            inventory.setCreatedAt(String.valueOf(new Date()));
             return inventoryRepository.save(inventory);
         } else {
             Inventory inventoryDB = inventoryRepository.findById(inventory.getId()).get();
-//            inventory.setCreatedAt(inventoryDB.getCreatedAt());
-//            inventory.setLastUpdated(String.valueOf(System.currentTimeMillis()));
+            inventory.setCreatedAt(inventoryDB.getCreatedAt());
+            inventory.setLastUpdated(String.valueOf(System.currentTimeMillis()));
             return inventoryRepository.save(inventory);
         }
     }
