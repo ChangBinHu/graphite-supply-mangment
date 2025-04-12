@@ -30,9 +30,9 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public boolean createUser( @RequestParam String userName,
+    public boolean createUser( @RequestParam String username,
                                @RequestParam String password) {
-        return userService.login(userName, password);
+        return userService.login(username, password);
     }
 
     @GetMapping("/{id}")

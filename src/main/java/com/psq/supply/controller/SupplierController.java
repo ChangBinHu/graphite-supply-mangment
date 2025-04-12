@@ -35,11 +35,16 @@ public class SupplierController {
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize) {
         Page<Supplier> users = supplierService.getAllSupplier(pageNumber, pageSize);
+        PageData<Supplier> pageData = getSupplierPageData(users);
+
+        return pageData;
+    }
+
+    private PageData<Supplier> getSupplierPageData(Page<Supplier> users) {
         PageData<Supplier> pageData = new PageData();
         pageData.setData(users.getContent());
         pageData.setTotalNum(users.getTotalElements());
         pageData.setHeaders(Arrays.asList( "供应商ID", "供应商名称", "联系人", "联系电话", "提供产品数", "合作关系", "操作"));
-
         return pageData;
     }
 
@@ -51,6 +56,16 @@ public class SupplierController {
         } else {
             return supplierRepository.save(supplier);
         }
+    }
+
+    @GetMapping("/search")
+    public PageData<Supplier> searchSupplier(@RequestParam(defaultValue = "") String name) {
+        Page<Supplier> inventories = supplierService.searchByName(name);
+
+        PageData<Supplier> pageData = getSupplierPageData(inventories);
+
+        return pageData;
+
     }
 
     @GetMapping("/{id}")

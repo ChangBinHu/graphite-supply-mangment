@@ -14,5 +14,4 @@ public interface InventoryRepository extends JpaRepository<Inventory, String> {
 
     // 默认分页查询（返回全部数据的分页结果）
     Page<Inventory> findAll(Pageable pageable);
-
 }

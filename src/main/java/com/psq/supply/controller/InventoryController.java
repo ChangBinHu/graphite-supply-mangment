@@ -35,13 +35,18 @@ public class InventoryController {
     public PageData<Inventory> getInventories(
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize) {
-        Page<Inventory> users = inventoryService.getAllInventory(pageNumber, pageSize);
+        Page<Inventory> inventories = inventoryService.getAllInventory(pageNumber, pageSize);
 
+        PageData<Inventory> pageData = getInventoryPageData(inventories);
+
+        return pageData;
+    }
+
+    private PageData<Inventory> getInventoryPageData(Page<Inventory> inventories) {
         PageData<Inventory> pageData = new PageData();
-        pageData.setData(users.getContent());
-        pageData.setTotalNum(users.getTotalElements());
+        pageData.setData(inventories.getContent());
+        pageData.setTotalNum(inventories.getTotalElements());
         pageData.setHeaders(Arrays.asList("产品编号", "产品名称", "类别", "数量", "单价", "最后更新", "操作"));
-
         return pageData;
     }
 
@@ -69,5 +74,17 @@ public class InventoryController {
     @DeleteMapping("/{id}")
     public void deleteInventory(@PathVariable String id) {
         inventoryRepository.deleteById(id);
+    }
+
+
+    @GetMapping("/search")
+    public PageData<Inventory> searchInventory(@RequestParam(defaultValue = "") String id,
+                                     @RequestParam(defaultValue = "") String name) {
+        Page<Inventory> inventories = inventoryService.searchByIdAndName(id, name);
+
+        PageData<Inventory> pageData = getInventoryPageData(inventories);
+
+        return pageData;
+
     }
 }

@@ -36,11 +36,16 @@ public class OrderRecordController {
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize) {
         Page<OrderRecord> users = orderRecordService.getAllOrder(pageNumber, pageSize);
+        PageData<OrderRecord> pageData = getOrderRecordPageData(users);
+
+        return pageData;
+    }
+
+    private PageData<OrderRecord> getOrderRecordPageData(Page<OrderRecord> users) {
         PageData<OrderRecord> pageData = new PageData();
         pageData.setData(users.getContent());
         pageData.setTotalNum(users.getTotalElements());
         pageData.setHeaders(Arrays.asList("订单编号", "客户", "日期", "金额", "当前位置","状态", "操作"));
-
         return pageData;
     }
 
@@ -57,6 +62,18 @@ public class OrderRecordController {
         } else {
             return orderRecordRepository.save(orderRecord);
         }
+
+    }
+
+
+    @GetMapping("/search")
+    public PageData<OrderRecord> searchOrderRecord(@RequestParam(defaultValue = "") String id,
+                                               @RequestParam(defaultValue = "") String status) {
+        Page<OrderRecord> orderRecords = orderRecordService.searchByIdAndStatus(id, status);
+
+        PageData<OrderRecord> pageData = getOrderRecordPageData(orderRecords);
+
+        return pageData;
 
     }
 

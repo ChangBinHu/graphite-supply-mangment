@@ -3,11 +3,12 @@ package com.psq.supply.service;
 import com.psq.supply.entity.OrderRecord;
 import com.psq.supply.repository.OrderRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author psq
@@ -29,4 +30,19 @@ public class OrderRecordService {
         return orderRecordRepository.countByStatus(status);
     }
 
+    public Page<OrderRecord> searchByIdAndStatus(String id, String status) {
+
+        List<OrderRecord> orderRecords = orderRecordRepository.findAll();
+        if (!StringUtils.isEmpty(id)) {
+            orderRecords = orderRecords.stream()
+                    .filter(orderRecord -> orderRecord.getId().equals(id)).collect(Collectors.toList());
+        }
+
+        if (!StringUtils.isEmpty(status)) {
+            orderRecords = orderRecords.stream().filter(orderRecord -> orderRecord.getStatus().equals(status)).collect(Collectors.toList());
+        }
+        Page page = new PageImpl(orderRecords);
+
+        return page;
+    }
 }
